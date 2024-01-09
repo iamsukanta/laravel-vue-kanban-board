@@ -22,6 +22,7 @@ Route::group([ 'middleware' => ['api', 'token.verify'], 'namespace' => 'App\Http
     Route::get('columns', 'ColumnsController@index');
     Route::post('columns', 'ColumnsController@store');
     Route::delete('columns/{id}', 'ColumnsController@destroy');
+    Route::put('columns/rearrange', 'ColumnsController@rearrangeCards');
 
     Route::post('columns/{id}/cards', 'ColumnsController@storeCard');
     Route::get('columns/{id}/cards', 'ColumnsController@getCards');

@@ -175,6 +175,31 @@ class ColumnsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @throws \ErrorException
+     */
+    public function rearrangeCards(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            foreach ($request->columns as $key=>$item) {
+                foreach ($item['cards'] as $sKey=>$subItem) {
+                    $card = Card::findOrFail($subItem['id']);
+                    $card->column_id = $item['id'];
+                    $card->position = $sKey;
+                    $card->save();
+                }
+            }
+            DB::commit();
+            return response(['message'=> 'Cards Successfully Rearranged'], 200);
+        } catch (\ErrorException $exception) {
+            DB::rollBack();
+            throw new \ErrorException($exception->getMessage(), 400);
+        }
+    }
+
+    /**
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ErrorException
      */
